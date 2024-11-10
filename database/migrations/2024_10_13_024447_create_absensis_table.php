@@ -14,17 +14,17 @@ return new class extends Migration
         if (!Schema::hasTable('absensis')) {
             Schema::create('absensis', function (Blueprint $table) {
                 $table->id('id_absensi'); // Primary key
-                $table->unsignedBigInteger('id_jabatan'); // Kolom jabatan
-                $table->enum('kehadiran_absen', allowed: ['sakit', 'izin', 'hadir', 'alpa']); // Status kehadiran
-                $table->unsignedBigInteger('user_id'); // Mengganti 'id' dengan 'user_id'
-                $table->date('tanggal_absen'); // Tanggal kehadiran
-                $table->unsignedBigInteger('id_detail'); // Foreign key ke detail
-                $table->timestamps(); // Kolom created_at dan updated_at
+                $table->unsignedBigInteger('id_jabatan'); // Job position foreign key
+                $table->enum('kehadiran_absen', ['sakit', 'izin', 'hadir', 'alpa']); // Attendance status
+                $table->unsignedBigInteger('user_id'); // User foreign key
+                $table->date('tanggal_absen'); // Attendance date
+                $table->unsignedBigInteger('id_detail'); // Foreign key to details
+                $table->timestamps(); // Created and updated timestamps
                 
-                // Tambahkan relasi foreign key
-                $table->foreign('id_jabatan')->references('id_jabatan')->on('jabatans')->onDelete('cascade'); // Pastikan nama tabel sesuai
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Menggunakan user_id sebagai foreign key
-                $table->foreign('id_detail')->references('id_detail')->on('details')->onDelete('cascade'); // Relasi ke tabel details
+                // Foreign key constraints
+                $table->foreign('id_jabatan')->references('id_jabatan')->on('jabatans')->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('id_detail')->references('id_detail')->on('details')->onDelete('cascade');
             });
         }
     }

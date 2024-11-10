@@ -9,21 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-{
-    Schema::create('users', function (Blueprint $table) {
-        $table->id();
-        $table->string('username');
-        $table->string('password');
-        $table->integer('id_jabatan');
-        $table->string('nik'); // Tambahkan kolom NIK
-        $table->enum('kelamin', ['L', 'P']); // Tambahkan kolom kelamin
-        $table->enum('role', ['admin', 'karyawan']);
-        $table->rememberToken();
-        $table->timestamps();
-    });
-}
-
+    public function up(): void
+    {
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id(); // Primary key
+                $table->string('username');
+                $table->string('password');
+                $table->unsignedBigInteger('id_jabatan'); // Foreign key for job position
+                $table->string('nik'); // Employee ID
+                $table->enum('kelamin', ['L', 'P']); // Gender
+                $table->enum('role', ['admin', 'karyawan']); // User role
+                $table->rememberToken();
+                $table->timestamps();
+                
+                // Foreign key constraints
+                $table->foreign('id_jabatan')->references('id_jabatan')->on('jabatans')->onDelete('cascade');
+            });
+        }
+    }
 
     /**
      * Reverse the migrations.

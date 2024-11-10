@@ -1,29 +1,38 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateIzinTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        Schema::create('izin', function (Blueprint $table) {
-            $table->id('id_izin'); // Primary key
-            $table->unsignedBigInteger('id_absensi'); // Foreign key
-            $table->string('jenis_izin');
-            $table->date('tanggal_mulai');
-            $table->date('tanggal_selesai');
-            $table->text('keterangan');
-            $table->string('foto_bukti');
-            $table->timestamps();
+        if (!Schema::hasTable('izin')) {
+            Schema::create('izin', function (Blueprint $table) {
+                $table->id('id_izin'); // Primary key
+                $table->unsignedBigInteger('id_absensi'); // Foreign key to absensis
+                $table->string('jenis_izin');
+                $table->date('tanggal_mulai');
+                $table->date('tanggal_selesai');
+                $table->text('keterangan');
+                $table->string('foto_bukti');
+                $table->timestamps();
 
-            // Define foreign key constraint
-            $table->foreign('id_absensi')->references('id')->on('absensi')->onDelete('cascade');
-        });
+                // Foreign key constraint
+                $table->foreign('id_absensi')->references('id_absensi')->on('absensis')->onDelete('cascade');
+            });
+        }
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('izin');
     }
-}
+};
